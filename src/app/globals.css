@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.main{
+  flex-grow: 1;
+}
+
+.navbar{
+  @apply overflow-x-hidden bg-bgpage2;
+}
+
+/* Estilos base para enlaces */
+.navlink {
+  @apply text-white mr-5 font-normal text-xl transition-all duration-300 hover:text-gray-600 hover:scale-110;
+}
+
+/* Estilos para versión móvil */
+.navlink-mobile {
+  @apply text-white text-3xl font-normal transition-all duration-300 hover:text-gray-600 text-center w-full py-3;
+}
+
+.btnLogin {
+  @apply rounded-xl bg-white text-bgpage2 w-48 h-14 transition-all duration-300  hover:text-gray-600;
+}
+
+.btnLogin-mobile {
+  @apply rounded-xl bg-white text-bgpage2 w-56 h-16 text-2xl transition-all duration-300 hover:text-gray-600 py-4 px-8 rounded-xl;
+}
+
+
+
+
+
+.flyer{
+  background: linear-gradient(to right, #A4B3BF,65%,#d4d4d4);
+}
+
+
+
+.embla {
+  position: relative;
+  width: 100%;
+}
+
+.embla__viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+.embla__container {
+  display: flex;
+}
+
+.embla__slide {
+  position: relative;
+  min-width: 25%; /* 4 slides por vista */
+}
+
+.embla__dots {
+  display: flex;
+  justify-content: center;
+}
+
+.embla__dot {
+  background: #ccc;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 10px;
+  margin: 0 5px;
+  position: relative;
+  width: 10px;
+  bottom: 110px;
+}
+
+.embla__dot.is-selected {
+  background: #333;
+}
+@media(width <= 640px)
+{
+  .embla__dots{
+    display: none;
+  }
+}
+/* 
+ para cuando este seleccionada una vista
+underline decoration-solid decoration-white decoration-4*/
+
+
