@@ -5,28 +5,44 @@ import person from "../../../../public/img/person.png"
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import {useState} from 'react'
+import { useRouter } from 'next/navigation' 
 
 const Login = () => {
     const [user,setUser] = useState()
     const [password,setPassword] = useState()
+    const router = useRouter() // 2. Inicializar router
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         const data = {
-          email:user, //email es la key
-          password:password //password es la key
+          email: user,
+          password: password
         }
-        const response = await fetch(`http://localhost/api/login`, {
-            method: 'POST',
-            cache: "no-cache",
-            headers: {
-              "Content-Type": 'application/json',
-              Authorization: "Bearer " + window.localStorage.getItem("token"),
-              Accept: 'application/json',
-            },
-            body: JSON.stringify(data),
-          });
-         console.log(await response.json());
-      }
+        
+        try {
+            const response = await fetch(`http://localhost/api/login`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": 'application/json',
+                    Accept: 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            const responseData = await response.json()
+
+            if (response.ok) {
+                // 3. Almacenar token y redirigir
+                window.localStorage.setItem("token", responseData.token)
+                router.push('/admin-dashboard')
+            } else {
+                // Manejar errores (opcional)
+                console.error("Error de autenticación:", responseData.message)
+            }
+        } catch (error) {
+            console.error("Error de red:", error)
+        }
+    }
     return (
         <>
         <Navbar/>
@@ -49,7 +65,7 @@ const Login = () => {
                     <button
                         type="submit"
                         className="rounded-lg mt-16 flex justify-center items-center bg-white w-[80%] h-16  transition delay-150 duration-700 ease-in-out hover:-translate-y-1  hover:bg-slate-600 hover:text-white font-bold text-xl md:text-lg"
-                        >Iniciar Sesión </button> abre los dos proyectos en la misma ventana
+                        >Iniciar Sesión </button> 
                 </div>
                 <div className="text-center flex flex-col mt-2 pb-10">
                 <Link href={"/auth/register"} className=" text-black text-base cursor-pointer transition delay-100 duration-500 ease-in-out hover:text-white">¿Aun no tienes una cuenta? Registrate</Link>
