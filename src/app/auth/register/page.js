@@ -4,28 +4,50 @@ import Image from "next/image"
 import person from "../../../../public/img/person.png"
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
+const Register = () => {
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [error, setError] = useState('')
+    const router = useRouter()
 
-const Register =  () => {
     const handleSubmit = async (e) => {
-    e.preventDefault()
-    console.log('sexo')
-    const data = {
-      name:'daniel',
-      password:''
+        e.preventDefault()
+        setError('')
+        
+        const data = {
+            name: name,
+            email: email,
+            password: password
+        }
+
+        try {
+            const response = await fetch('http://localhost/api/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+
+            const responseData = await response.json()
+
+            if (response.ok) {
+                
+                window.localStorage.setItem("token", responseData.token)
+                router.push('/admin-dashboard')
+                console.log(responseData);
+            } else {
+                setError(responseData.title || 'Error en el registro')
+            }
+        } catch (error) {
+            setError('Error de conexión con el servidor')
+        }
     }
-    const response = await fetch(`http://localhost/api/register`, {
-        method: 'POST',
-        cache: "no-cache",
-        headers: {
-          "Content-Type": 'application/json',
-          Authorization: "Bearer " + window.localStorage.getItem("token"),
-          Accept: 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-     console.log(await response.json());
-  }
     return (
         <>
         <Navbar/>
@@ -40,10 +62,11 @@ const Register =  () => {
                 </div>
                 <p className="text-center text-black font-bold text-2xl pt-16">¡REGISTRATE!</p>
                 <div className="inputContainer text-center mt-12 flex items-center flex-col ">
-                    <input type="email" placeholder="Correo Electrónico" className="bg-white text-black w-[80%] h-16 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-none hover:shadow-lg hover:border-blue-300 text-lg pl-4"/>
-                    <input type="password" placeholder="Contraseña" className="bg-white text-black w-[80%] h-16 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-none hover:shadow-lg hover:border-blue-300 mt-8 text-lg pl-4"/>
-                    <input type="password" placeholder="Repetir Contraseña" className="bg-white text-black w-[80%] h-16 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-none hover:shadow-lg hover:border-blue-300 mt-8 text-lg pl-4"/>
-                    {/* <Link className='rounded-lg mt-16 flex justify-center items-center bg-white w-[80%] h-16  transition delay-150 duration-700 ease-in-out hover:-translate-y-1  hover:bg-slate-600 hover:text-white font-bold text-xl md:text-lg' href={"/"}>
+                    <input onChange={(e) => setName(e.target.value)} type="text" placeholder="Nombre de usuario" className="bg-white text-black w-[80%] h-16 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-none hover:shadow-lg hover:border-blue-300 text-lg pl-4"/>
+                    <input onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Correo Electrónico" className="bg-white text-black w-[80%] h-16 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-none hover:shadow-lg hover:border-blue-300 mt-8 text-lg pl-4"/>
+                    <input  onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Contraseña" className="bg-white text-black w-[80%] h-16 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-none hover:shadow-lg hover:border-blue-300 mt-8 text-lg pl-4"/>
+                    {error && <p className="text-red-500 mt-4">{error}</p>}
+                        {/* <Link className='rounded-lg mt-16 flex justify-center items-center bg-white w-[80%] h-16  transition delay-150 duration-700 ease-in-out hover:-translate-y-1  hover:bg-slate-600 hover:text-white font-bold text-xl md:text-lg' href={"/"}>
                         Regístrate
                     </Link>   */}
                     <button
